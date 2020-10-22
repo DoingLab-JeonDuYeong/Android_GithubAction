@@ -17,7 +17,31 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        myKey {
+            keyAlias "myKey"
+            keyPassword "duyeong"
+            storeFile file("./myKey.jks")
+            storePassword "duyeong"
+        }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        dev {
+            signingConfig signingConfigs.myKey
+        }
+
+        prod {
+            signingConfig signingConfigs.myKey
+        }
+    }
+
     buildTypes {
+        debug {
+            debuggable true
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
