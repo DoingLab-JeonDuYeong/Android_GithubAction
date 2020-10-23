@@ -28,6 +28,13 @@ jobs:
       run: ./gradlew assembleDevDebug
       if: ${{ always() }}
       
+#    - name: Uploading build
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: APK
+#        path: app/build/outputs/apk/dev/debug/app-dev-debug.apk
+#      if: ${{ always() }}
+      
     - name: upload artifact to Firebase App Distribution
       uses: wzieba/Firebase-Distribution-Github-Action@v1
       with:
@@ -46,4 +53,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
       if: always() # Pick up events even if the job fails or is canceled.
-
+        
+    - name: Upload to slack step
+      uses: adrey/slack-file-upload-action@master
+      with:
+        token: ${{ secrets.SLACK_TOKEN }}
+        path: app/build/outputs/apk/dev/debug/app-dev-debug.apk
+        channel: android-deploy
+      if: always() # Pick up events even if the job fails or is canceled.
