@@ -19,8 +19,22 @@ jobs:
         java-version: 1.8
     - name: DevDebug Unit Test
       run: ./gradlew testDevDebugUnitTest
+      
     - name: DevDebug Unit Test Report
       uses: asadmansr/android-test-report-action@v1.2.0
+      if: ${{ always() }}
+      
+    - name: DevDebug Build
+      run: ./gradlew assembleDevDebug
+      if: ${{ always() }}
+      
+    - name: upload artifact to Firebase App Distribution
+      uses: wzieba/Firebase-Distribution-Github-Action@v1
+      with:
+        appId: ${{secrets.FIREBASE_APP_ID}}
+        token: ${{secrets.FIREBASE_TOKEN}}
+        groups: tester
+        file: app/build/outputs/apk/dev/debug/app-dev-debug.apk
       if: ${{ always() }}
       
     - name: Send Build Result to Slack
