@@ -22,3 +22,14 @@ jobs:
     - name: DevDebug Unit Test Report
       uses: asadmansr/android-test-report-action@v1.2.0
       if: ${{ always() }}
+      
+    - name: Send Build Result to Slack
+      uses: 8398a7/action-slack@v2.6.0
+      with:
+        status: ${{job.status}}
+        author_name: "DoingLab Android CI"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+      if: always() # Pick up events even if the job fails or is canceled.
+
